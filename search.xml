@@ -174,7 +174,7 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
-<li>修改站点配置文件，theme后为主题名（next主题的相关配置可参考<a href="/2020/01/20/NexT%E4%B8%BB%E9%A2%98%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/" title="next主题相关设置">next主题相关设置</a>）</li>
+<li>修改站点配置文件，theme后为主题名（NexT主题的相关配置可参考<a href="/2020/01/20/NexT%E4%B8%BB%E9%A2%98%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/" title="NexT主题相关设置">NexT主题相关设置</a>）</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure>
 
