@@ -1,21 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2020/01/19/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+    <title>GitHub+Hexo搭建个人博客</title>
+    <url>/2020/01/20/GitHub-Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<p>最近花了一些时间使用GitHub+Hexo搭建了自己的博客，在这边进行一个记录。（这边默认大家已经有了github账号和git环境）</p>
+<h2 id="创建github仓库"><a href="#创建github仓库" class="headerlink" title="创建github仓库"></a>创建github仓库</h2><ol>
+<li><p>仓库名为”用户名.github.io”</p>
+</li>
+<li><p>设置为public，private的别人就访问不到啦</p>
+</li>
+<li><p>勾选README</p>
+</li>
+</ol>
+<p><img src="/images/hexo_make_blog/%E5%88%9B%E5%BB%BA%E5%8D%9A%E5%AE%A2%E4%BB%93%E5%BA%93.png" alt="创建博客仓库"></p>
+<h2 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h2><p><a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">nodejs下载地址</a></p>
+<p>1.检验npm是否安装成功，执行以下命令，有输出版本号即为成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm -v</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><ol>
+<li>新建一个文件夹专门放blog文件，我们取名为MyBlog</li>
+<li>进入Myblog，右键Git Bash here</li>
+<li>使用npm安装Hexo</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>初始化博客，此时会新增一个blog文件夹</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init blog</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>检验Hexo是否可用，进入blog文件夹输入以下命令，后在浏览器中输入localhost:4000即可看到测试博文</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new 测试文章 <span class="comment">#新建一篇文章</span></span><br><span class="line">hexo g <span class="comment">#生成</span></span><br><span class="line">hexo s <span class="comment">#启动本地服务</span></span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<h2 id="关联github"><a href="#关联github" class="headerlink" title="关联github"></a>关联github</h2><ol>
+<li>\MyBlog\blog下的_config.yml称为“站点配置文件”</li>
+<li>站点配置文件中修改配置</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: https:&#x2F;&#x2F;github.com&#x2F;vicedev&#x2F;vicedev.github.io.git #刚才建的仓库地址</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>安装github部署插件</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>部署到github</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean <span class="comment">#清除缓存，若是网页正常情况下可以忽略这条命令</span></span><br><span class="line">hexo g <span class="comment">#生成</span></span><br><span class="line">hexo d <span class="comment">#部署</span></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>此时打开”用户名.github.io”即可看到博客</li>
+</ol>
+<h2 id="使用自己的域名"><a href="#使用自己的域名" class="headerlink" title="使用自己的域名"></a>使用自己的域名</h2><ol>
+<li>以阿里云为例，购买域名后进入控制台</li>
+<li>域名状态可能需要实名下，点击解析</li>
+</ol>
+<p><img src="/images/hexo_make_blog/%E9%98%BF%E9%87%8C%E4%BA%91%E6%8E%A7%E5%88%B6%E5%8F%B01.png" alt="阿里云控制台1"></p>
+<ol start="3">
+<li>点击添加记录，设置可参照我的这两条，其中ip地址可通过ping “用户名.github.io”获取</li>
+</ol>
+<p><img src="/images/hexo_make_blog/%E9%98%BF%E9%87%8C%E4%BA%91%E6%8E%A7%E5%88%B6%E5%8F%B02.png" alt="添加记录"></p>
+<ol start="4">
+<li>在“\MyBlog\blog\source”下新建名为“CNAME”的文件（注意不要有后缀名），里面写入你的域名地址（*.xx.xx，比如*.vicedev.cn）使*代替www，这样后面设置类似”blog.vicedev.cn”的也可以访问到</li>
+<li>重新生成部署到github</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g <span class="comment">#生成</span></span><br><span class="line">hexo d <span class="comment">#部署</span></span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>现在可以通过你的域名访问啦，可能生效时间没那么快需要再等会</li>
+</ol>
+<h2 id="添加二级域名（blog-xx-xx的网址就是这么来的）"><a href="#添加二级域名（blog-xx-xx的网址就是这么来的）" class="headerlink" title="添加二级域名（blog.xx.xx的网址就是这么来的）"></a>添加二级域名（blog.xx.xx的网址就是这么来的）</h2><ol>
+<li>控制台域名下添加记录</li>
+</ol>
+<p><img src="/images/hexo_make_blog/%E9%98%BF%E9%87%8C%E4%BA%91%E6%8E%A7%E5%88%B6%E5%8F%B03.png" alt="二级域名"></p>
+<ol start="2">
+<li>即可通过blog.vicedev.cn访问，前提是“\MyBlog\blog\public”下的CNAME文件设置了*.vicedev.cn</li>
+</ol>
+<h2 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h2><ol>
+<li>生成新文章，文件目录在“\MyBlog\blog\source_posts\文章题目.md”</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new 文章题目</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>添加图片，可把图片放在“\MyBlog\blog\source\images”，markdown中通过”/images/xx.png”引用</li>
+<li>写完后通过执行生成和部署命令即可部署到github</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g <span class="comment">#生成</span></span><br><span class="line">hexo d <span class="comment">#部署</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="更换主题"><a href="#更换主题" class="headerlink" title="更换主题"></a>更换主题</h2><ol>
+<li><a href="https://hexo.io/themes/" target="_blank" rel="noopener">主题网站</a></li>
+<li>clone相关主题到“\MyBlog\blog\themes”目录下</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>修改站点配置文件，theme后为主题名（next主题的相关配置可参考[Hexo next主题配置]）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">theme: next</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>重新生成部署即可</li>
+</ol>
 ]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
   </entry>
 </search>
