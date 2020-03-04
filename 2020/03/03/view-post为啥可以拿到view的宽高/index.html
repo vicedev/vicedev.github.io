@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Mist',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="我们都知道可以通过View去post一个Runnable对象，在其中就可以通过getWidth和getHeight获取到View的宽高，那么为什么呢？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="view.post为啥可以拿到view的宽高">
+<meta property="og:url" content="http://yoursite.com/2020/03/03/view-post%E4%B8%BA%E5%95%A5%E5%8F%AF%E4%BB%A5%E6%8B%BF%E5%88%B0view%E7%9A%84%E5%AE%BD%E9%AB%98/index.html">
+<meta property="og:site_name" content="人生海海">
+<meta property="og:description" content="我们都知道可以通过View去post一个Runnable对象，在其中就可以通过getWidth和getHeight获取到View的宽高，那么为什么呢？">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-03T11:37:47.000Z">
+<meta property="article:modified_time" content="2020-03-04T12:06:04.714Z">
+<meta property="article:author" content="vicedev">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="源码分析">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/03/view-post%E4%B8%BA%E5%95%A5%E5%8F%AF%E4%BB%A5%E6%8B%BF%E5%88%B0view%E7%9A%84%E5%AE%BD%E9%AB%98/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>view.post为啥可以拿到view的宽高 | 人生海海</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">人生海海</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">https://github.com/vicedev</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/03/view-post%E4%B8%BA%E5%95%A5%E5%8F%AF%E4%BB%A5%E6%8B%BF%E5%88%B0view%E7%9A%84%E5%AE%BD%E9%AB%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="vicedev">
+      <meta itemprop="description" content="随便写写">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="人生海海">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          view.post为啥可以拿到view的宽高
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-03 19:37:47" itemprop="dateCreated datePublished" datetime="2020-03-03T19:37:47+08:00">2020-03-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-04 20:06:04" itemprop="dateModified" datetime="2020-03-04T20:06:04+08:00">2020-03-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我们都知道可以通过View去post一个Runnable对象，在其中就可以通过getWidth和getHeight获取到View的宽高，那么为什么呢？</p>
+<a id="more"></a> 
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">//View#post</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">post</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">final</span> AttachInfo attachInfo = mAttachInfo;</span><br><span class="line">       <span class="keyword">if</span> (attachInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> attachInfo.mHandler.post(action);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">// Postpone the runnable until we know on which thread it needs to run.</span></span><br><span class="line">       <span class="comment">// Assume that the runnable will be successfully placed after attach.</span></span><br><span class="line">       getRunQueue().post(action);</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这边判断了attachInfo对象是否为空，不为空时通过attachInfo.mHandler去post该Runnable，为空时则调用getRunQueue()去post该Runnable，我们先看看getRunQueue().post方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> HandlerActionQueue <span class="title">getRunQueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mRunQueue == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mRunQueue = <span class="keyword">new</span> HandlerActionQueue();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mRunQueue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">//HandlerActionQueue</span></span><br><span class="line">   <span class="keyword">private</span> HandlerAction[] mActions;</span><br><span class="line">...</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">       postDelayed(action, <span class="number">0</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postDelayed</span><span class="params">(Runnable action, <span class="keyword">long</span> delayMillis)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">final</span> HandlerAction handlerAction = <span class="keyword">new</span> HandlerAction(action, delayMillis);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">           <span class="keyword">if</span> (mActions == <span class="keyword">null</span>) &#123;</span><br><span class="line">               mActions = <span class="keyword">new</span> HandlerAction[<span class="number">4</span>];</span><br><span class="line">           &#125;</span><br><span class="line">           mActions = GrowingArrayUtils.append(mActions, mCount, handlerAction);</span><br><span class="line">           mCount++;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到getRunQueue方法返回了一个HandlerActionQueue对象，该对象的post方法会调用到postDelayed方法，新建了一个HandlerAction对象，并执行了GrowingArrayUtils.append把handlerAction添加到数组中，然后就没了。那我们返回去看attachInfo是什么时候赋值的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">//View#dispatchAttachedToWindow</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dispatchAttachedToWindow</span><span class="params">(AttachInfo info, <span class="keyword">int</span> visibility)</span> </span>&#123;</span><br><span class="line">       mAttachInfo = info;</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到在View的dispatchAttachedToWindow中传入了AttachInfo对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">//ViewRootImpl</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ViewRootImpl</span><span class="params">(Context context, Display display)</span> </span>&#123;</span><br><span class="line">   	...</span><br><span class="line">       mAttachInfo = <span class="keyword">new</span> View.AttachInfo(mWindowSession, mWindow, display, <span class="keyword">this</span>, mHandler, <span class="keyword">this</span>, context);</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">//ViewRootImpl</span></span><br><span class="line">...</span><br><span class="line">   View mView;</span><br><span class="line">...</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">performTraversals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">final</span> View host = mView;</span><br><span class="line">   	...</span><br><span class="line">   	host.dispatchAttachedToWindow(mAttachInfo, <span class="number">0</span>);</span><br><span class="line">       ...</span><br><span class="line">       getRunQueue().executeActions(mAttachInfo.mHandler);</span><br><span class="line">   	...</span><br><span class="line">       performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);</span><br><span class="line">       ...</span><br><span class="line">       performLayout(lp, mWidth, mHeight);</span><br><span class="line">       ...</span><br><span class="line">       performDraw();</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">executeActions</span><span class="params">(Handler handler)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">           <span class="keyword">final</span> HandlerAction[] actions = mActions;</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, count = mCount; i &lt; count; i++) &#123;</span><br><span class="line">               <span class="keyword">final</span> HandlerAction handlerAction = actions[i];</span><br><span class="line">               handler.postDelayed(handlerAction.action, handlerAction.delay);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           mActions = <span class="keyword">null</span>;</span><br><span class="line">           mCount = <span class="number">0</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在ViewRootImpl构造函数中创建了AttachInfo对象，并于performTraversals中调用了host.dispatchAttachedToWindow，接着调用了getRunQueue().executeActions方法，该方法中可以看到是将mActions数组中的Runnable对象用handler的postDelayed方法放入了消息队列中，这个mActions数组就是上面我们分析的在attachInfo为空的情况下会将Runnable对象添加到该数组中。再后面执行的就是我们非常熟悉的测量、布局和绘制过程，在performLayout之后就能拿到view的宽高了。虽然host.dispatchAttachedToWindow和getRunQueue().executeActions的调用都在测量之前，但是因为他们实际上都是在消息队列中加入了一个消息，所以实际执行到Runnable的时候view已经展示了出来，也就能获取到宽高了。</p>
+<p><strong>拓展知识：</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ApplicationThread#scheduleResumeActivity-&gt;ActivityThread#handleResumeActivity-&gt; Activity#makeVisible-&gt;WindowManager#addView-&gt;WindowManagerImpl#addView-&gt;WindowManagerGlobal#addView-&gt;ViewRootImpl#setView-&gt;ViewRootImpl#requestLayout-&gt;ViewRootImpl#scheduleTraversals-&gt;ViewRootImpl#performTraversals</span><br></pre></td></tr></table></figure>
+
+<p>一些关键方法的执行顺序，视图是在Activity#onResume之后才被添加进window并开始测量布局的，所以onResume也没办法直接获取到宽高。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag"># 源码分析</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/23/%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%9F%AD%E8%A7%86%E9%A2%91%E5%B0%9D%E8%AF%95/" rel="prev" title="第一次短视频尝试">
+      <i class="fa fa-chevron-left"></i> 第一次短视频尝试
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="vicedev"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">vicedev</p>
+  <div class="site-description" itemprop="description">随便写写</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/vicedev" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;vicedev" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:vicedev1001@gmail.com" title="E-Mail → mailto:vicedev1001@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">vicedev</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: '058f8d3a3c71b9917d4f',
+      clientSecret: '30cf95bb421fac528c51f6fc013b9d8278a72a01',
+      repo: 'blog_comments',
+      owner: 'vicedev',
+      admin: ['vice'],
+      id: 'eaa773c9c69b57fdbfff7dd1e9997405',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
