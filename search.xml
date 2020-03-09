@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Gradle之Groovy语法</title>
+    <url>/2020/03/09/Gradle%E4%B9%8BGroovy%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<p>Gradle是一个基于Apache Ant和Apache Maven概念的项目自动化构建工具，咱们在Android Studio中也是一直在用，学习Gradle的使用可以花式构建我们的App，甚至可以编写一些Plugin来做一些骚操作。咱们可以用Groovy语言来编写Gradle脚本，让我们先进行Groovy的语法学习。</p>
+<a id="more"></a> 
+
+<p>Groovy的语法与java还是有很多相似之处的，但是它比java更加的灵活。</p>
+<p>练习Groovy语法可在Android Studio的Tools–Groovy Console中进行。</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//变量申明</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> num = <span class="number">1</span></span><br><span class="line">String name = <span class="string">"vice"</span></span><br><span class="line"><span class="keyword">float</span> money = <span class="number">66.6</span>f</span><br><span class="line"><span class="keyword">boolean</span> show = <span class="literal">false</span></span><br><span class="line"><span class="comment">//相较于java新增的def声明方式</span></span><br><span class="line"><span class="keyword">def</span> xx = <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//变量赋值</span></span><br><span class="line">num = <span class="number">6</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//数组</span></span><br><span class="line"></span><br><span class="line">String[] list = [<span class="string">'aa'</span>, <span class="string">'bb'</span>, <span class="string">'cc'</span>] </span><br><span class="line"><span class="keyword">def</span> list = [<span class="string">'aa'</span>, <span class="string">'bb'</span>, <span class="string">'cc'</span>] </span><br><span class="line"></span><br><span class="line"><span class="comment">//添加元素</span></span><br><span class="line">list.add(<span class="string">'dd'</span>)</span><br><span class="line"><span class="comment">//获取元素</span></span><br><span class="line"><span class="keyword">def</span> a = list[<span class="number">1</span>]</span><br><span class="line"><span class="comment">//集合大小</span></span><br><span class="line">println list.size()</span><br><span class="line"><span class="comment">//遍历集合</span></span><br><span class="line">list.each &#123;</span><br><span class="line">    println(it)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//map</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> names = [<span class="string">'key1'</span>:<span class="number">11</span>,<span class="string">"key2"</span>:<span class="number">22</span>]</span><br><span class="line"><span class="comment">//获取对象key的value值</span></span><br><span class="line"><span class="keyword">def</span> name = names[<span class="string">'key1'</span>]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//字符串模板</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> text = <span class="string">'text'</span></span><br><span class="line">println <span class="string">'text is $&#123;text&#125;'</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//无需指定参数类型</span></span><br><span class="line">String testFunction(arg1,arg2)&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//也可不指定返回值类型，此时需要使用def</span></span><br><span class="line"><span class="keyword">def</span> testFunction(arg1,arg2)&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//函数默认返回值为方法最后一行代码</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//闭包</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//闭包格式</span></span><br><span class="line">&#123; 参数<span class="number">1</span> = 默认值 , 参数<span class="number">2</span> -&gt;</span><br><span class="line">	代码...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义闭包c</span></span><br><span class="line"><span class="keyword">def</span> c = &#123;</span><br><span class="line">    a, b = <span class="number">1</span> -&gt; println a + b</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//定义一个方法，传参是一个闭包类型Closure</span></span><br><span class="line"><span class="keyword">def</span> func(Closure closure) &#123;</span><br><span class="line">    closure(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//调用方法func，传入闭包c</span></span><br><span class="line">func c</span><br><span class="line"></span><br><span class="line"><span class="comment">//结果为：3</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Android</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>view.post为啥可以拿到view的宽高</title>
     <url>/2020/03/03/view-post%E4%B8%BA%E5%95%A5%E5%8F%AF%E4%BB%A5%E6%8B%BF%E5%88%B0view%E7%9A%84%E5%AE%BD%E9%AB%98/</url>
     <content><![CDATA[<p>我们都知道可以通过View去post一个Runnable对象，在其中就可以通过getWidth和getHeight获取到View的宽高，那么为什么呢？</p>
