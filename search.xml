@@ -6,6 +6,7 @@
     <content><![CDATA[<p>Gradle是一个基于Apache Ant和Apache Maven概念的项目自动化构建工具，咱们在Android Studio中也是一直在用，学习Gradle的使用可以花式构建我们的App，甚至可以编写一些Plugin来做一些骚操作。咱们可以用Groovy语言来编写Gradle脚本，让我们先进行Groovy的语法学习。</p>
 <a id="more"></a> 
 
+<p>官网api文档：<a href="http://www.groovy-lang.org/api.html" target="_blank" rel="noopener">http://www.groovy-lang.org/api.html</a></p>
 <p>Groovy的语法与java还是有很多相似之处的，但是它比java更加的灵活。</p>
 <p>练习Groovy语法可在Android Studio的Tools–Groovy Console中进行。</p>
 <figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="comment">//变量申明</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> num = <span class="number">1</span></span><br><span class="line">String name = <span class="string">"vice"</span></span><br><span class="line"><span class="keyword">float</span> money = <span class="number">66.6</span>f</span><br><span class="line"><span class="keyword">boolean</span> show = <span class="literal">false</span></span><br><span class="line"><span class="comment">//相较于java新增的def声明方式</span></span><br><span class="line"><span class="keyword">def</span> xx = <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//变量赋值</span></span><br><span class="line">num = <span class="number">6</span></span><br></pre></td></tr></table></figure>
